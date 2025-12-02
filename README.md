@@ -35,15 +35,15 @@ javac *.java
 
 The current task involves generating key pairs for asymmetric encryption, requiring separate private and public keys. This process will employ the RSA algorithm, a standard method in cryptographic systems for creating such key pairs.
 
-### Generating a pair of keys with OpenSSL
+### Generating keys with OpenSSL
 
-Generate the server key pair:
+Generate the server key:
 
 ```sh
 openssl genrsa -out server.key
 ```
 
-Now create the keys for the user:
+Now create the key for the user:
 
 ```sh
 openssl genrsa -out user.key
@@ -83,7 +83,7 @@ openssl x509 -req -days 365 -in user.csr -CA server.crt -CAkey server.key -out u
 
 ### Convert certificate
 
-For Java to be able to read the certificates that were created is necessary to convert them to the right format.
+For Java to be able to read the certificates that were created, it is necessary to convert them to the right format.
 
 ```sh
 openssl x509 -in server.crt -out server.pem
