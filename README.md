@@ -118,7 +118,7 @@ keytool -import -trustcacerts -file user.pem -keypass changeme -storepass change
 
 ## Connecting the user to the server
 
-Now that we have compiled and created a certificate for both user, we can try make a secure socket connection with the server.
+Now that we have compiled and created a certificate for both user and server, we can try to establish a secure socket connection with the server.
 To do this we first start the server:
 
 ```sh
