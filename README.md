@@ -2,7 +2,7 @@ Instituto Superior Técnico, Universidade de Lisboa
 
 **Network and Computer Security**
 
-# Lab guide: Secure Sockets in action
+# Lab guide: TLS Secure Sockets in action
 
 This lab guide focuses on using an existing and robust secure sockets implementation.
 The protocol was originally called SSL, standing for Secure Sockets Layer.
