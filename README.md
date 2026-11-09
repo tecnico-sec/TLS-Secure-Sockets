@@ -18,7 +18,7 @@ The goals of the laboratory are:
 - Use those to establish a secure channel;
 - Exchange data using the established channel.
 
-## Setup
+## 1. Setup
 
 This laboratory assignment uses Java Development Kit (JDK) version 7 or later, running on Linux.
 The Java platform strongly emphasizes security, including language safety, cryptography, public key infrastructure, secure communication, authentication and access control.
@@ -31,11 +31,11 @@ Since we only require the Java platform, we use the java compiler directly:
 javac *.java
 ```
 
-## Asymmetric keys
+## 2. Asymmetric keys
 
 The current task involves generating key pairs for asymmetric encryption, requiring separate private and public keys. This process will employ the RSA algorithm, a standard method in cryptographic systems for creating such key pairs.
 
-### Generating keys with OpenSSL
+### 2.1. Generating keys with OpenSSL
 
 Generate the server key:
 
@@ -49,7 +49,7 @@ Now create the key for the user:
 openssl genrsa -out user.key
 ```
 
-### Generating a self-signed certificate
+### 2.2. Generating a self-signed certificate
 
 Create a Certificate Signing Request, using same key (click "enter" to everything that is asked, except when asked for "A challenge password[]" use "changeme"):
 
@@ -81,7 +81,7 @@ So it's replaced by:
 openssl x509 -req -days 365 -in user.csr -CA server.crt -CAkey server.key -out user.crt
 ```
 
-### Convert certificate
+### 2.3. Convert certificate
 
 For Java to be able to read the certificates that were created, it is necessary to convert them to the right format.
 
@@ -93,7 +93,7 @@ openssl x509 -in server.crt -out server.pem
 openssl x509 -in user.crt -out user.pem
 ```
 
-### Create a p12 file
+### 2.4. Create a p12 file
 
 With the certificates and the keys we created, we can use them to create a p12 file (password should be "changeme").
 A p12 file contains a digital certificate that uses PKCS#12 (Public Key Cryptography Standard #12) encryption.
@@ -106,17 +106,18 @@ openssl pkcs12 -export -in server.crt -inkey server.key -out server.p12
 openssl pkcs12 -export -in user.crt -inkey user.key -out user.p12
 ```
 
-### Import the certificate
+### 2.5. Import the certificate
 
 Now you will add to the jks file of the server the certificate of the user so he trusts that user.
-jks file is the default keystore type in the Sun/Oracle Java security provider. And in this case it will store the certificates the server trusts.
-If promted with "Trust this certificate? [no]:  yes", confirm by typing "yes".
+jks file is the default keystore type in the Sun/Oracle Java security provider.
+And, in this case, it will store the certificates the server trusts.
+If prompted with "Trust this certificate? [no]:  yes", confirm by typing "yes".
 
 ```sh
 keytool -import -trustcacerts -file user.pem -keypass changeme -storepass changeme -keystore servertruststore.jks
 ```
 
-## Connecting the user to the server
+## 3. Connecting the user to the server
 
 Now that we have compiled and created a certificate for both user and server, we can try to establish a secure socket connection with the server.
 To do this we first start the server:
@@ -125,7 +126,8 @@ To do this we first start the server:
 java -cp . Server
 ```
 
-If you receive an exception saying ```Exception in thread "main" java.net.BindException: Address already in use```, then this means that the port 5000 is already in use on your machine. You can either shutdown the application that is making use of the port or you can change the hardcoded port 5000 in the ```Server.java``` file to another unused port, recompile using ```javac```, and use that port throughout the rest of this lab guide.
+If you receive an exception saying ```Exception in thread "main" java.net.BindException: Address already in use```, then this means that the port 5000 is already in use on your machine. 
+You can either shutdown the application that is making use of the port or you can change the hardcoded port 5000 in the ```Server.java``` file to another unused port, recompile using ```javac```, and use that port throughout the rest of this lab guide.
 
 The `cp` option specifies the *classpath*, i.e., where to look for the Java class files.
 In this case, the current directory is specified as classpath.
@@ -144,7 +146,7 @@ Now try using the correct port (you will need to restart the server):
 java -cp . Client 5000
 ```
 
-The connection should fail again, what happened this time was that the certificate of the server wasn't sent to the user.
+The connection should fail again, what happened this time was that the certificate of the server was not sent to the user.
 If you were trying to open a website what should appear is [this](https://untrusted-root.badssl.com/).
 
 So now try adding the server certificate to the user jks so he can trust the server (again, if promted with "Trust this certificate? [no]:  yes", confirm by typing "yes"):
@@ -172,7 +174,7 @@ What you should see when trying to open a website is [this](https://https-everyw
 
 ----
 
-## Conclusion
+## 4. Conclusion
 
 This lab guide covered secure socket communication using the Java implementation of SSL/TLS.
 Participants generated RSA key pairs, created self-signed certificates, and established a communication channel.
