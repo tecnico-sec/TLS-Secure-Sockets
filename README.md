@@ -98,12 +98,34 @@ openssl x509 -in user.crt -out user.pem
 With the certificates and the keys we created, we can use them to create a p12 file (password should be "changeme").
 A p12 file contains a digital certificate that uses PKCS#12 (Public Key Cryptography Standard #12) encryption.
 
+Server Keystore:
 ```sh
-openssl pkcs12 -export -in server.crt -inkey server.key -out server.p12
+openssl pkcs12 -export -name server \
+  -in server.crt -inkey server.key -out server.p12 \
+  -passout pass:changeme
+```
+User Keystore:
+```sh
+openssl pkcs12 -export -name user \
+  -in user.crt -inkey user.key -out user.p12 \
+  -passout pass:changeme
 ```
 
+Verify generated keystores:
+
+Server Keystore:
 ```sh
-openssl pkcs12 -export -in user.crt -inkey user.key -out user.p12
+keytool -list -v -storetype PKCS12 -keystore server.p12 -storepass changeme
+```
+User Keystore:
+```sh
+keytool -list -v -storetype PKCS12 -keystore user.p12 -storepass changeme
+```
+
+Verify source code:
+
+```sh
+grep -E 'System.setProperty\("javax\.net\.ssl\..*Password"' *.java
 ```
 
 ### 2.5. Import the certificate
